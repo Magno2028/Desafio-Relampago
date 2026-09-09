@@ -10,25 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar arquivos
+      - name: Baixar código
         uses: actions/checkout@v4
 
-      - name: Preparar Java
+      - name: Preparar projeto Android
+        run: |
+          ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
+          unzip -q "$ZIP" -d projeto
+          cd projeto/DesafioRelampagoAndroid
+          echo "Projeto preparado"
+
+      - name: Configurar Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Preparar Gradle
+      - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
 
-      - name: Construir APK
+      - name: Compilar APK
+        working-directory: projeto/DesafioRelampagoAndroid
         run: gradle assembleDebug --stacktrace
 
-      - name: Enviar APK
+      - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
         with:
           name: Desafio-Relampago-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: projeto/DesafioRelampagoAndroid/app/build/outputs/apk/debug/app-debug.apk
