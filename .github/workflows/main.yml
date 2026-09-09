@@ -1,0 +1,46 @@
+name: Construir APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ principal ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar arquivos
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Extrair projeto Android
+        run: |
+          mkdir projeto
+          unzip -q Desafio_Relampago_Android_v1.zip -d projeto
+
+      - name: Encontrar projeto
+        run: |
+          PROJETO=$(dirname "$(find projeto -name settings.gradle -print -quit)")
+          echo "PROJETO=$PROJETO" >> $GITHUB_ENV
+
+      - name: Gerar APK
+        run: |
+          cd "$PROJETO"
+          gradle assembleDebug
+
+      - name: Publicar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Desafio-Relampago-APK
+          path: projeto/**/app/build/outputs/apk/debug/app-debug.apk
