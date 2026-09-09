@@ -1,9 +1,9 @@
-name: Construir APK
+name: Build APK
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ principal ]
+    branches: [principal]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,23 +24,11 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Extrair projeto Android
-        run: |
-          mkdir projeto
-          unzip -q Desafio_Relampago_Android_v1.zip -d projeto
+      - name: Construir APK
+        run: gradle assembleDebug --stacktrace
 
-      - name: Encontrar projeto
-        run: |
-          PROJETO=$(dirname "$(find projeto -name settings.gradle -print -quit)")
-          echo "PROJETO=$PROJETO" >> $GITHUB_ENV
-
-      - name: Gerar APK
-        run: |
-          cd "$PROJETO"
-          gradle assembleDebug
-
-      - name: Publicar APK
+      - name: Enviar APK
         uses: actions/upload-artifact@v4
         with:
-          name: Desafio-Relampago-APK
-          path: projeto/**/app/build/outputs/apk/debug/app-debug.apk
+          name: Desafio-Relampago-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
