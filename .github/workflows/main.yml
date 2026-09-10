@@ -15,7 +15,7 @@ jobs:
 
       - name: Preparar projeto Android
         run: |
-          ZIP="Desafio_Relampago_Android_Niveis.zip"
+          ZIP="Desafio_Relampago_4-1.zip"
           unzip -q "$ZIP" -d projeto
           cd projeto/DesafioRelampagoAndroid
           echo "Projeto preparado"
