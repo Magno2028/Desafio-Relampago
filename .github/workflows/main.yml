@@ -15,7 +15,7 @@ jobs:
 
       - name: Preparar projeto Android
         run: |
-          ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
+          ZIP="Desafio_Relampago_Android_Niveis.zip"
           unzip -q "$ZIP" -d projeto
           cd projeto/DesafioRelampagoAndroid
           echo "Projeto preparado"
